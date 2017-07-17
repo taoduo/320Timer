@@ -30,11 +30,10 @@
 	<script>
 		// globals
 		var myButton;
-		var H = 1000 * 60 * 60;
-		var M = 1000 * 60;
-		var S = 1000;
+		var H = 1000 * 60 * 60, M = 1000 * 60, S = 1000;
+		var workT = 5 * S, breakT = 3 * S;
 
-		// helper
+		// helper, time in ms.
 		function displayTime(time) {
 			// Time calculations for days, hours, minutes and seconds
 			var hours = Math.floor(time / H);
@@ -43,29 +42,34 @@
 
 			document.getElementById("timer").innerHTML = hours + "h "
 			+ minutes + "m " + seconds + "s ";
-		}
+		}		
 
-		// set time to run totTime > 0
-		function setTime(totTime) {
+		// set time to run. Break at bt.
+		function setTime(wt, bt) {
+			var t = wt + bt;
 			var x = setInterval(function() {
-				displayTime(totTime);
-				if (totTime <= 0) {
+				displayTime(t);
+				if (t == 0) {
 					clearInterval(x);
-					widget.system("scripts/notify '20s-20feet' 'Break'", null);
+					myButton.setEnabled(true);
 				} else {
-					totTime -= 1000;
+					if (t == bt) {
+						widget.system("scripts/notify '20 seconds - 20 Feet' 'Take a Break.'", null);
+					}
+					t -= S;
 				}
-			}, 1000);
+			}, S);
 		}
-		 
+		
 		function buttonClicked() {
-			setTime(5000);
+			setTime(workT, breakT);
+			myButton.setEnabled(false);
 		}
 
 		function setup() {
 		    myButton = new AppleGlassButton(
 		        document.getElementById("myButton"),
-		        "OK",
+		        "Start",
 		        buttonClicked);
 		    displayTime(0);
 		}
