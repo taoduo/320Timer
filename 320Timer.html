@@ -27,18 +27,18 @@
 
 	</style>
 	<script type='text/javascript' src='/System/Library/WidgetResources/AppleClasses/AppleButton.js' charset='utf-8'/>
+	<!-- Button script -->
 	<script type="text/javascript">
 		var gMyGlassButton;
 		 
 		function buttonClicked() {
-			widget.system("scripts/notify", null);
 		}
 
 		function setup()
 		{
 		    gMyGlassButton = new AppleGlassButton(
 		        document.getElementById("myButton"),
-		        "Click Me",
+		        "OK",
 		        buttonClicked);
 		}
 	</script>
@@ -47,9 +47,9 @@
 	<img src="Default.png">
 	<div id="timer"></div>
 	<div id="myButton"></div>
-	<script>
-		
 
+	<!-- Timer script -->
+	<script>
 		var totTime = 5 * 1000;
 		var x = setInterval(function() {
 			showTime(totTime);
@@ -68,7 +68,7 @@
 			// If the count down is finished, write some text 
 			if (totTime <= 0) {
 				clearInterval(x);
-				widget.system("scripts/notify", null);
+				widget.system("scripts/notify '20s-20feet' 'Break'", null);
 			}
 			totTime -= 1000;
 		}

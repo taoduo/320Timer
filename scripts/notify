@@ -1,4 +1,4 @@
 #!/bin/sh
 osascript<<END 
-display notification "Hello world!" with title "Hi!"
+display notification "$1" with title "$2"
 END
