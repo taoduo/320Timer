@@ -21,25 +21,53 @@
 
 		#myButton {
 		    position: absolute;
-		    right: 70px;
+		    right: 90px;
 		    bottom: 20px;
 		}
 
 	</style>
 	<script type='text/javascript' src='/System/Library/WidgetResources/AppleClasses/AppleButton.js' charset='utf-8'/>
-	<!-- Button script -->
-	<script type="text/javascript">
-		var gMyGlassButton;
-		 
-		function buttonClicked() {
+	<script>
+		// globals
+		var myButton;
+		var H = 1000 * 60 * 60;
+		var M = 1000 * 60;
+		var S = 1000;
+
+		// helper
+		function displayTime(time) {
+			// Time calculations for days, hours, minutes and seconds
+			var hours = Math.floor(time / H);
+			var minutes = Math.floor((time % H) / M);
+			var seconds = Math.floor((time % M) / S);
+
+			document.getElementById("timer").innerHTML = hours + "h "
+			+ minutes + "m " + seconds + "s ";
 		}
 
-		function setup()
-		{
-		    gMyGlassButton = new AppleGlassButton(
+		// set time to run totTime > 0
+		function setTime(totTime) {
+			var x = setInterval(function() {
+				displayTime(totTime);
+				if (totTime <= 0) {
+					clearInterval(x);
+					widget.system("scripts/notify '20s-20feet' 'Break'", null);
+				} else {
+					totTime -= 1000;
+				}
+			}, 1000);
+		}
+		 
+		function buttonClicked() {
+			setTime(5000);
+		}
+
+		function setup() {
+		    myButton = new AppleGlassButton(
 		        document.getElementById("myButton"),
 		        "OK",
 		        buttonClicked);
+		    displayTime(0);
 		}
 	</script>
 </head>
@@ -47,31 +75,7 @@
 	<img src="Default.png">
 	<div id="timer"></div>
 	<div id="myButton"></div>
-
-	<!-- Timer script -->
-	<script>
-		var totTime = 5 * 1000;
-		var x = setInterval(function() {
-			showTime(totTime);
-		}, 1000);
-		// show the time in timer. 
-		// time in ms.
-		function showTime(time) {
-			// Time calculations for days, hours, minutes and seconds
-			var hours = Math.floor((totTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-			var minutes = Math.floor((totTime % (1000 * 60 * 60)) / (1000 * 60));
-			var seconds = Math.floor((totTime % (1000 * 60)) / 1000);
-
-			// Display the result in the element with id="demo"
-			document.getElementById("timer").innerHTML = hours + "h "
-			+ minutes + "m " + seconds + "s ";
-			// If the count down is finished, write some text 
-			if (totTime <= 0) {
-				clearInterval(x);
-				widget.system("scripts/notify '20s-20feet' 'Break'", null);
-			}
-			totTime -= 1000;
-		}
-	</script>
+	
+	</body>
 </body>
 </html>
