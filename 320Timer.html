@@ -9,7 +9,7 @@
 		}
 
 		#timer {
-		  font: 10px "Lucida Grande";
+		  font: 15px "Lucida Grande";
 		  font-weight: bold;
 		  color: white;
 		  text-align: center;
@@ -19,18 +19,41 @@
 		  width: 180px;
 		}
 
+		#myButton {
+		    position: absolute;
+		    right: 70px;
+		    bottom: 20px;
+		}
+
 	</style>
+	<script type='text/javascript' src='/System/Library/WidgetResources/AppleClasses/AppleButton.js' charset='utf-8'/>
+	<script type="text/javascript">
+		var gMyGlassButton;
+		 
+		function buttonClicked() {
+			widget.system("scripts/notify", null);
+		}
+
+		function setup()
+		{
+		    gMyGlassButton = new AppleGlassButton(
+		        document.getElementById("myButton"),
+		        "Click Me",
+		        buttonClicked);
+		}
+	</script>
 </head>
-<body>
+<body onload="setup();">
 	<img src="Default.png">
 	<div id="timer"></div>
+	<div id="myButton"></div>
 	<script>
+		
+
 		var totTime = 5 * 1000;
-		var displayCmd = "osascript -e 'display notification \"Hello world!\" with title \"Hi!\"'";
 		var x = setInterval(function() {
 			showTime(totTime);
 		}, 1000);
-
 		// show the time in timer. 
 		// time in ms.
 		function showTime(time) {
@@ -43,10 +66,9 @@
 			document.getElementById("timer").innerHTML = hours + "h "
 			+ minutes + "m " + seconds + "s ";
 			// If the count down is finished, write some text 
-			if (totTime < 0) {
+			if (totTime <= 0) {
 				clearInterval(x);
-	            document.getElementById("timer").innerHTML = 'EXPIRD';
-				widget.system("scripts/openPrefs", null);
+				widget.system("scripts/notify", null);
 			}
 			totTime -= 1000;
 		}
