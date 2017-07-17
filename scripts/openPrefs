@@ -1,0 +1,4 @@
+#!/bin/sh
+osascript<<END 
+display notification "Hello world!" with title "Hi!"
+END
